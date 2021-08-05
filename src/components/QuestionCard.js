@@ -1,7 +1,7 @@
 
 import Axios from 'axios'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import FinalPage from './FinalPage'
 
 function QuestionCard() {
   const [correctAnswer, setCorrectAnswer] = React.useState('')
@@ -27,7 +27,7 @@ function QuestionCard() {
 
   function checkAnswer (e) {
     e.preventDefault()
-    if (e.target.value === correctAnswer) {
+    if ( e.target.value.toLowerCase() === correctAnswer.toLowerCase()) {
       console.log('You did it!')
       return answerIsCorrect = true
     } else {
@@ -38,7 +38,7 @@ function QuestionCard() {
 
   function onSubmit(e) {
     e.preventDefault()
-    if (answerIsCorrect === true && questionCount < 3) {
+    if (answerIsCorrect && questionCount < 3) {
       setQuestionCount(questionCount + 1)
       answerIsCorrect = null
       console.log(answerIsCorrect)
@@ -60,30 +60,35 @@ function QuestionCard() {
       <section className="section">
         <div className="container">
           <div className="columns">
-            <h1>Question: {question}</h1>
-          </div>
+
+            {questionCount <= 2 &&
+        <>
+          <h1>Question: {question}</h1>
           <div className="field">
             <label className="label">Answer</label>
-            <div className="control">
-              <input
-                className="input correct"
-                placeholder="Type your answer here"
-                name="userAnswer"
-                onChange={checkAnswer}
-              />
-            </div>
-            <div className="field">
-              {questionCount <= 2 &&
-                <button onClick={onSubmit} type="submit" className="button is-warning is-fullwidth">
-                  Submit
-                </button>
-              }
-              {questionCount === 3 && 
-                <button onClick={onSubmit} type="submit" className="button is-warning is-fullwidth">
-                  <Link to="/">Submit</Link>
-                </button>
-              }
-            </div>
+          </div>
+          <div className="control">
+            <input
+              className="input correct"
+              placeholder="Type your answer here"
+              name="userAnswer"
+              onChange={checkAnswer}
+            />
+          </div>
+          <div className="field">
+            <button onClick={onSubmit} type="submit" className="button is-warning is-fullwidth">
+                Submit
+            </button>
+          </div>
+        </>
+            }
+
+            {questionCount === 3 && 
+          <>
+            <FinalPage />
+          </>
+            }
+
           </div>
         </div>
       </section>
