@@ -1,4 +1,2 @@
-GET https://trivia.willfry.co.uk/api/questions?limit=10
-
-###
-
+# GET 10 RANDOM MOVIE QUESTIONS
+GET https://trivia.willfry.co.uk/api/questions?categories=movies&limit=10

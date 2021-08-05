@@ -1,7 +1,7 @@
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
-import QuestionCard from './components/QuestionCard'
-import questionCount from './components/QuestionCard'
-import FinalPage from './components/FinalPage'
+import QuestionCard from './components/game/QuestionCard'
+import questionCount from './components/game/QuestionCard'
+import FinalPage from './components/common/FinalPage'
 
 function App() {
   return (
