@@ -1,6 +1,5 @@
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
-import QuestionCard from './components/game/QuestionCard'
-import questionCount from './components/game/QuestionCard'
+import QuestionCard from './components/game/QuestionCard' 
 import FinalPage from './components/common/FinalPage'
 
 function App() {
@@ -15,11 +14,9 @@ function App() {
           <h1>I am the game page</h1>
           <QuestionCard />
         </Route>
-        {questionCount === 3 && 
-          <Route path="/final">
-            <FinalPage />
-          </Route>
-        }
+        <Route path="/final">
+          <FinalPage />
+        </Route>
       </Switch>
     </BrowserRouter>
   )
