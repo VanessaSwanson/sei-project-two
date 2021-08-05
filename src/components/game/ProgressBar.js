@@ -1,8 +1,9 @@
-function ProgressBar() {
+
+
+function ProgressBar( { questionCount } ) {
 
   return (
-    <h1>Test</h1>
-    // <progress className="progress is-primary" value={questionCount} max="10">10%</progress>
+    <progress className="progress is-primary" value={questionCount} max="10">10%</progress>
   )
 }
 

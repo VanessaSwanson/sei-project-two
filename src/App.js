@@ -4,6 +4,10 @@ import QuestionCard from './components/game/QuestionCard'
 import FinalPage from './components/common/FinalPage'
 
 function App() {
+  const [score, setScore] = React.useState(0)
+  const resetScore = () => {
+    setScore(0)
+  }
 
   return (
     <BrowserRouter>
@@ -13,10 +17,15 @@ function App() {
           <Link to="/game">Start game</Link>
         </Route>
         <Route path="/game">
-          <QuestionCard />
+          <QuestionCard 
+            score = {score}
+            setScore = {setScore} 
+          />
         </Route>
         <Route path="/final">
-          <FinalPage />
+          <FinalPage 
+            resetScore = {resetScore}
+          />
         </Route>
       </Switch>
     </BrowserRouter>
