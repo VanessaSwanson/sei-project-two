@@ -1,8 +1,12 @@
 import React from 'react'
-import FinalPage from '../common/FinalPage.js'
+import { useHistory } from 'react-router-dom'
+
 import { getMovieQuestions } from '../../lib/api.js'
 import Loading from '../common/Loading'
-import ProgressBar from './ProgressBar.js'
+import ProgressBar from './question_card_components/ProgressBar'
+import ClueToast from './question_card_components/ClueToast'
+import AnswersToast from './question_card_components/AnswersToast'
+import Error from '../common/Error.js'
 
 function QuestionCard( { score, setScore }) {
   const [correctAnswer, setCorrectAnswer] = React.useState('')
@@ -10,23 +14,32 @@ function QuestionCard( { score, setScore }) {
   const [quizQuestion, setQuizQuestion] = React.useState('')
   const [questionCount, setQuestionCount] = React.useState(0)
 
-  const [clue, setClue] = React.useState(false)
-  // const cluePhrase = [`Don't even think about writing ${incorrectAnswer}`, `It's definitely not ${incorrectAnswer}`, `You could try ${incorrectAnswer} but you'd be wrong.`]
-  const clues = [
-    `You could try writing ${incorrectAnswer} but you'd be wrong`, 
-    `One of these is the correct answer: ${incorrectAnswer}; ${correctAnswer}`, 
-    `The following is an anagram of the correct answer: ${correctAnswer.split('').sort().join('')}` 
-  ]
-
   const [cluesLeft, setCluesLeft] = React.useState(3)
   const [cluePhraseScroll, setCluePhraseScroll] = React.useState(-1)
-  const [clueShown, setClueShown] = React.useState(false)
+  const [clue, setClue] = React.useState(false)
 
   const [correctAnswerShown, setCorrectAnswerShown] = React.useState(false)
   const [answerIsCorrect, setAnswerIsCorrect] = React.useState(null)
   const [userAnswer, setUserAnswer] = React.useState('')
   const [tick, setTick] = React.useState(false)
 
+  const [isError, setIsError] = React.useState(false)
+  const isLoading = !quizQuestion && !isError
+  const history = useHistory()
+
+  const clueToastData = {
+    score: score, 
+    setScore: setScore, 
+    cluesLeft: cluesLeft, 
+    setCluesLeft: setCluesLeft, 
+    cluePhraseScroll: cluePhraseScroll, 
+    setCluePhraseScroll: setCluePhraseScroll, 
+    incorrectAnswer: incorrectAnswer, 
+    correctAnswer: correctAnswer, 
+    clue: clue, 
+    setClue: setClue,
+  }
+  
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -36,12 +49,11 @@ function QuestionCard( { score, setScore }) {
         setIncorrectAnswer(response.data[0].incorrectAnswers[0])
       } catch (err) {
         console.log(err)
+        setIsError(true)
       }
     }
     getData()
   }, [questionCount])
-
-  console.log(correctAnswer)
 
   function checkAnswer (e) {
     e.preventDefault()
@@ -75,53 +87,33 @@ function QuestionCard( { score, setScore }) {
         setAnswerIsCorrect(null)
         setClue(false)
         setUserAnswer('')
-      }, 2000)
+      }, 3000)
     }
-
   }
 
-  const handleAddClue = (e) => {
-    e.preventDefault()
-    setClue(true)
-    setScore(score - 20)
-    setCluesLeft(cluesLeft - 1)
-    setCluePhraseScroll(cluePhraseScroll + 1)
-    setClueShown(true)
-  }
-
-  const handleRemoveClue = (e) => {
-    e.preventDefault()
-    setClueShown(false)
+  if (questionCount === 10) {
+    history.push('/final')
   }
 
   return (
     <>
-      {/* Loading */}
-      {!quizQuestion && <Loading />}
       <form>
-
         {/* Main form section */}
-        <section className="section">
-          <div className="container">
+        <section className="section question-card">
+          <div className="container box main">
+            {isError && <Error />}
+            {isLoading && <Loading />}
             {quizQuestion && questionCount <= 9 &&
               <>
-                {score < 0 &&
-                <div className="score low">Score: {score}</div>
-                }
-                {score >= 0 && 
-                <div className="score">Score: {score}</div>
-                }
-                {cluesLeft === 0 &&
-                  <div className="lives low">Clues left: {cluesLeft}</div>
-                }
-                {cluesLeft > 0 &&
-                  <div className="lives">Clues left: {cluesLeft}</div>
-                }
-                  
-                <h1>Question: {quizQuestion}</h1>
-                <div className="field">
-                  <label className="label">Answer</label>
+                <div className="level">
+                  <div className="level-item">
+                    <p className="score subtitle is-4">Score:<span className={score < 0 && 'low'}>{score}</span></p>
+                  </div>
+                  <div className="level-item">
+                    <p className="lives subtitle is-4">Clues left:<span className={cluesLeft === 0 && 'low'}> {cluesLeft}</span></p>
+                  </div>
                 </div>
+                <p className="subtitle is-5"><strong>Question:</strong> {quizQuestion}</p>
                 <div className="control">
                   <input
                     className="input correct"
@@ -132,53 +124,20 @@ function QuestionCard( { score, setScore }) {
                   />
                 </div>
 
-                {/* Correct and incorrect popups */}
-                <div className="field">
-                  {correctAnswerShown && 
-                  <div className="notification is-danger">
-                    <div><p>Oops! Nice try, but the correct answer is: {correctAnswer}</p></div>
-                  </div>
-                  }
-                  {tick && 
-                  <div className="notification is-primary">
-                    <div><p>Correct!</p></div>
-                  </div>}
+                <AnswersToast correctAnswerShown={correctAnswerShown} correctAnswer={correctAnswer} tick={tick} />
 
-                  {/* Submit button */}
-                  <button onClick={onSubmit} type="submit" className="button is-warning is-fullwidth">
+                {/* Buttons */}
+                <div className="controls">
+                  <div className="field">
+                    <button onClick={onSubmit} type="submit" className="button is-warning is-medium">
                       Submit
-                  </button>
+                    </button>
+                  </div>
+                  <ClueToast {...clueToastData}/>
                 </div>
-                  
-                {/* Clue popup */}
-                {!clue && cluesLeft > 0 && <button className="button is-info" onClick={handleAddClue}>Clue</button>}
-
-                {/* Multiple clues */}
-                {clue && clueShown && <div className="notification is-info">
-                  <button className="delete" onClick={handleRemoveClue}></button>
-                  <div><p>{clues[cluePhraseScroll]}</p></div>
-                </div>}
-                
-                {/* It's not... clue */}
-                {/* {clue && clueShown && <div className="notification is-primary">
-                  <button className="delete" onClick={handleRemoveClue}></button>
-                  <div><p>{cluePhrase[cluePhraseScroll]}</p></div>
-                </div>} */}
-
-                <ProgressBar 
-                  questionCount = {questionCount}
-                />
+                <ProgressBar questionCount={questionCount}/>
               </>
             }
-
-            {questionCount === 10 && 
-          <>
-            <FinalPage 
-              score = {score}
-            />
-          </>
-            }
-            
           </div>
         </section>
       </form>

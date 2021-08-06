@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom'
 
-function FinalPage( { score, resetScore }) { 
 
-  
+function FinalPage( { score, resetScore } ) {  
   return (
-    <>
-      <h1>You have reached the end of the quiz!</h1>
-      <p>Your final score is {score}</p>
-      <button onClick={resetScore}>
-        <Link to="/">Return to home</Link>
-      </button>
-    </>
+    <section className="section landing-page">
+      <div className="container has-text-centered">
+        <div className="landing-page-text">
+          <div className="box">
+            <p className="title">You have reached the end of the quiz!</p>
+            <p className="subtitle">Your final score is { score } points.</p>
+          </div>
+          <Link to="/" className="button is-warning is-medium" onClick={resetScore}>Return to home</Link>
+        </div>
+      </div>
+    </section>
   )
 }
 
