@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const baseUrl = 'https://trivia.willfry.co.uk/api/questions?categories='
+const baseUrl = 'https://api.trivia.willfry.co.uk/questions?categories='
+
 
 export function getMovieQuestions() {
   return axios.get(`${baseUrl}movies&limit=1`)
