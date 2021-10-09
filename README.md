@@ -77,9 +77,11 @@ Movie Quiz <a name="moviequiz"></a>
 
 After investigating different public APIs, Harry and I decided to build a movie quiz app. Players are given 10 questions, which they answer by typing in their given answers. They can earn points for each correct answer, but will lose points for each clue used and each incorrect answer. They can use three clues to help them along the way.
 
-You can play the deployed game [here](https://sei-movie-quiz.netlify.app/), or watch the clip below for an overview of functionality.
+You can play the deployed game [here](https://sei-movie-quiz.netlify.app/), or click on the link below to watch an overview of functionality.
 
-(I will make video showing full functionality of game)
+[<img width="863" alt="Screenshot 2021-10-09 at 15 39 40" src="https://user-images.githubusercontent.com/78015278/136662591-5106ae4f-1bb2-46ed-b0ab-1f28e7631f7b.png">](https://www.youtube.com/watch?v=mcCPWHUw0Jw)
+
+
 
 Getting Started <a name="gettingstarted"></a>
 ===============
